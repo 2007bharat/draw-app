@@ -19,9 +19,10 @@
     "@prisma/client": "7",
     "dotenv": "^18.0.0",
     "pg": "^8.23.0",
-    "prisma": "7"
+    "prisma": "7",
+    "tsx": "^4.23.15"
   },
   "scripts": {
-    "postinstall": "prisma skills sync || exit 0"
+    "dev": "bun tsx ./src/prismaClient.ts"
   }
 }

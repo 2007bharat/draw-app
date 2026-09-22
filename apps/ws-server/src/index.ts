@@ -4,16 +4,19 @@ import { WebSocketServer } from "ws";
 import { IncomingMessage } from "node:http";
 import { tokenSecret, client } from "@repo/db-common/prismaClient";
 const wss = new WebSocketServer({ port: 8080 });
-type Users = {
+type Users<T> = {
   userId: number;
-  roomId: string[];
+  roomId: T[];
   ws: WebSocket;
 };
 interface TokenPaylod {
   userId: number;
 }
-const users: Users[] = [];
-
+type ClientTypeChat = "join_room" | "chat_room" | "leave_room";
+type ClientJoinChatType<T> = { type: T; roomId: string };
+type roomIds = string[];
+const users: Users<roomIds>[] = [];
+const rooms: roomIds = [];
 async function tokenValid(token: string) {
   try {
     const verifyToken = jwt.verify(token, tokenSecret as string) as TokenPaylod;
@@ -58,7 +61,12 @@ wss.on("connection", async (ws: WebSocket, request: IncomingMessage) => {
   });
 
   ws.on("message", (data: WebSocket.RawData) => {
-    console.log(data);
-    const parsedData = JSON.parse(data.toString());
+    const parsedData: ClientJoinChatType<ClientTypeChat> = JSON.parse(
+      data.toString(),
+    );
+    if (parsedData.type === "join_room") {
+      rooms.push(parsedData.roomId);
+      ws.send(`congratulation to join this ${parsedData.type}`);
+    }
   });
 });

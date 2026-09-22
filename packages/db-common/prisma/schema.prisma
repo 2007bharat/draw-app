@@ -16,18 +16,21 @@ datasource db {
 
 model User {
   id        Int       @id @default(autoincrement())
+  username  String
   email     String    @unique 
   password  String
   chats     Chat[]
   rooms     Room[]
+  createdAt   DateTime    @default(now())  
+  
 } 
 model Chat {
   id          Int         @id @default(autoincrement())
   userChatId  Int
   userId      User        @relation(fields: [userChatId] , references: [id])
   createdAt   DateTime    @default(now())  
-  roomID      Int
-  room        Room        @relation(fields: [roomID] , references: [id])
+  roomId      Int
+  room        Room        @relation(fields: [roomId] , references: [id])
 }
 
 model Room {
@@ -37,5 +40,4 @@ model Room {
   Admin       User        @relation(fields: [AdminId] , references: [id])
   chat        Chat[]    
   createAt    DateTime    @default(now())
-
 }
