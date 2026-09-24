@@ -39,7 +39,6 @@ export default function ClientSignInPage() {
   const handlerFunction: React.FormEventHandler<HTMLFormElement> = async (
     e,
   ) => {
-    console.log(BACKEND_URL + "sign-in");
     e.preventDefault();
     const response = await axios.post(
       BACKEND_URL + "sign-in",

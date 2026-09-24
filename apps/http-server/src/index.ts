@@ -181,7 +181,7 @@ app.get(
     try {
       const chat = await client.chat.findMany({
         where: {
-          id: Number(parsedData.data.roomId),
+          roomId: Number(parsedData.data.roomId),
         },
         orderBy: {
           id: "desc",
@@ -192,7 +192,7 @@ app.get(
       if (chat.length === 0) {
         return res.json({
           success: false,
-          message: `chat/${req.params.roomId} not found`,
+          message: [],
         });
       }
       res.json({

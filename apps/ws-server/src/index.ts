@@ -12,7 +12,7 @@ type Users<T> = {
 interface TokenPaylod {
   userId: number;
 }
-type ClientTypeChat = "join_room" | "chat_room" | "leave_room";
+export type ClientTypeChat = "join_room" | "chat_room" | "leave_room";
 type ClientJoinChatType<T> = { type: T; roomId: string };
 type roomIds = string[];
 const users: Users<roomIds>[] = [];

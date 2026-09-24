@@ -10,7 +10,6 @@ export function Middleware(req, res, next) {
         else {
             tokenSplit = token;
         }
-        console.log(token);
         if (!token || token === null) {
             return res.json({
                 success: false,

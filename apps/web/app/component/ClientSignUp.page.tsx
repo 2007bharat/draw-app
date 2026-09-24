@@ -46,7 +46,7 @@ export default function ClientSignUpPage() {
   const handlerFunction: React.FormEventHandler<HTMLFormElement> = async (
     e,
   ) => {
-    console.log(BACKEND_URL + "sign-up");
+    BACKEND_URL + "sign-up";
     e.preventDefault();
     const response = await axios.post(BACKEND_URL + "sign-up", {
       username: state.username,

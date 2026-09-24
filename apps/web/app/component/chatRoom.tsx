@@ -13,6 +13,5 @@ export default async function ChatRoom({ id }: { id: number }) {
       Cookie: `token=${token}`,
     },
   });
-  console.log(response.data);
   return <ClientChatRoom message={response.data.message} />;
 }

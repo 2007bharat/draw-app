@@ -6,7 +6,6 @@ export default function Home() {
   const [roomId, setRoomId] = useState<string>("");
   const router = useRouter();
   function NavigationButton(): void {
-    console.log(roomId);
     if (roomId.trim() === "") {
       return;
     } else {

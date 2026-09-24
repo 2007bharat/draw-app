@@ -14,7 +14,6 @@ export async function getRoom<GetRoomProps extends string>(name: GetRoomProps) {
         Cookie: `token=${token}`,
       },
     });
-    console.log("DAta" + JSON.stringify(response.data));
     return response.data.message.id;
   } catch (err) {
     if (err instanceof AxiosError) {
@@ -30,6 +29,5 @@ export default async function ({
 }): Promise<JSX.Element> {
   const { slug } = await params;
   const roomId = await getRoom<string>(slug);
-  console.log("id h y" + roomId);
   return <ChatRoom id={roomId} />;
 }

@@ -7,7 +7,6 @@ export function Middleware(req: Request, res: Response, next: NextFunction) {
     let tokenSplit;
     let token = req.cookies?.token || "";
 
-    console.log(token);
     if (!token) {
       return res.json({
         success: false,
