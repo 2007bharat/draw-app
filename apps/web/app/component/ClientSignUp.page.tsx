@@ -2,8 +2,9 @@
 
 import axios from "axios";
 import React, { useReducer } from "react";
-import { BACKEND_URL } from "../room/[slug]/page";
+
 import { useRouter } from "next/navigation";
+export const BACKEND_URL = "http://localhost:5000/";
 
 type SignUpProps = {
   username: string;
@@ -52,7 +53,7 @@ export default function ClientSignUpPage() {
       email: state.email,
       password: state.password,
     });
-    if (response.status === 200) {
+    if (response.data.success) {
       router.push("/signin");
     }
   };

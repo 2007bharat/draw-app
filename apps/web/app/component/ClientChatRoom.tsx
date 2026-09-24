@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import { redirect } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 type ClientChatRoomType = {
   id: number;
@@ -15,14 +16,14 @@ export default function ClientChatRoom({
   message: ClientChatRoomType[];
 }) {
   const [chat, setChat] = useState<string>("sst");
+
   const handlerFunction: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setChat(e.target.value);
   };
-  console.log(chat);
+
   return (
     <>
-      <h1>{JSON.stringify(chat)}</h1>
-      {/* <input
+      <input
         value={chat}
         placeholder="..send Message"
         onChange={(e) => handlerFunction(e)}
@@ -30,9 +31,9 @@ export default function ClientChatRoom({
       <button>Send Message</button>
       <div>
         {message.map((chat) => {
-          return <p>{chat.message}</p>;
+          return <p key={chat.id}>{chat.message}</p>;
         })}
-      </div> */}
+      </div>
     </>
   );
 }

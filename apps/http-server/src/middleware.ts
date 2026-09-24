@@ -5,30 +5,20 @@ import jwt from "jsonwebtoken";
 export function Middleware(req: Request, res: Response, next: NextFunction) {
   try {
     let tokenSplit;
-    let token = req.headers.authorization || req.cookies?.token || "";
-    if (token.startsWith("Bearer ")) {
-      tokenSplit = req.headers.authorization?.split(" ")[1];
-    } else {
-      tokenSplit = token;
-    }
+    let token = req.cookies?.token || "";
+
     console.log(token);
-    if (!token || token === null) {
+    if (!token) {
       return res.json({
         success: false,
         message: "Invalid Token as Bearer ...",
-      });
-    }
-    if (tokenSplit == null) {
-      return res.json({
-        success: false,
-        message: "Invalid Token",
       });
     }
 
     type TokenPayload = {
       id: number;
     };
-    const checkToken = jwt.verify(tokenSplit, tokenSecret) as TokenPayload;
+    const checkToken = jwt.verify(token, tokenSecret) as TokenPayload;
     if (typeof checkToken === "string") {
       return res.json({
         success: false,

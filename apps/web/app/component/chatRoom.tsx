@@ -1,14 +1,18 @@
 import axios from "axios";
-import { BACKEND_URL } from "../room/[slug]/page";
+import { cookies } from "next/headers";
+
 import ClientChatRoom from "./ClientChatRoom";
-import { consoleAsyncStorage } from "next/dist/server/app-render/console-async-storage.external";
+export const BACKEND_URL = "http://localhost:5000/";
 
 export default async function ChatRoom({ id }: { id: number }) {
-  const response = await axios.get(BACKEND_URL + "chats/" + id);
-  console.log("Y data h reponse ka " + JSON.stringify(response.data));
-  return (
-    <>
-      <ClientChatRoom message={response.data} />
-    </>
-  );
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  const response = await axios.get(BACKEND_URL + "chats/" + id, {
+    headers: {
+      Cookie: `token=${token}`,
+    },
+  });
+  console.log(response.data);
+  return <ClientChatRoom message={response.data.message} />;
 }

@@ -2,8 +2,9 @@
 
 import axios from "axios";
 import React, { useReducer } from "react";
-import { BACKEND_URL } from "../room/[slug]/page";
+
 import { useRouter } from "next/navigation";
+export const BACKEND_URL = "http://localhost:5000/";
 
 type SignInProps = {
   email: string;
@@ -40,10 +41,16 @@ export default function ClientSignInPage() {
   ) => {
     console.log(BACKEND_URL + "sign-in");
     e.preventDefault();
-    const response = await axios.post(BACKEND_URL + "sign-in", {
-      email: state.email,
-      password: state.password,
-    });
+    const response = await axios.post(
+      BACKEND_URL + "sign-in",
+      {
+        email: state.email,
+        password: state.password,
+      },
+      {
+        withCredentials: true,
+      },
+    );
     if (response.data.message === "Login Successful") {
       router.push("/");
     } else {
