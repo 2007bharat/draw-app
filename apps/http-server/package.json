@@ -6,7 +6,7 @@
   "scripts": {
     "build": "bun tsc -b",
     "dev": "bun tsx ./src/index.ts ",
-    "Start": "bun run ./dist/index.js"
+    "start": "bun run ./dist/index.js"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -19,8 +19,12 @@
   },
   "dependencies": {
     "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/jsonwebtoken": "^9.0.10",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "jsonwebtoken": "^9.0.3"
   }
 }

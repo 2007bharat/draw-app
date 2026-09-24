@@ -6,7 +6,7 @@ export const UserSchema = z.object({
 });
 
 export const CreateRoomSchema = z.object({
-  name: z.string().min(3).max(9),
+  name: z.string(),
 });
 
 export const SignSchema = z.object({
