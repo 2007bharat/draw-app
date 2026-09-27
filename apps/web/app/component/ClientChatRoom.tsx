@@ -10,7 +10,7 @@ type ClientChatRoomType = {
   createdAt: Date;
   roomId: number;
 };
-
+type ParialClientChat = Partial<ClientChatRoomType>;
 export default function ClientChatRoom({
   message,
   id,
@@ -19,7 +19,8 @@ export default function ClientChatRoom({
   id: number;
 }) {
   const { loading, socket } = useScoket();
-  const [chat, setChat] = useState<string>("sst");
+  const [currentMessage, setCurrentMessage] = useState<string>("");
+  const [chat, setChat] = useState<ParialClientChat[]>(message);
   useEffect(() => {
     if (socket && !loading) {
       socket!.send(
@@ -28,14 +29,23 @@ export default function ClientChatRoom({
           roomId: id,
         }),
       );
+      socket.onmessage = (event: MessageEvent) => {
+        const parsedData = JSON.parse(event.data);
+        if (parsedData.type === "chat_room") {
+          setChat((prev) => {
+            return [...prev, { message: parsedData.message }];
+          });
+        }
+      };
     }
   });
+
   const handlerFunction: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setChat(e.target.value);
+    setCurrentMessage(e.target.value);
   };
   const text =
-    message.length > 0 ? (
-      message.map((chat) => <p key={chat.id}>{chat.message}</p>)
+    chat.length > 0 ? (
+      chat.map((chat) => <p key={chat.id}>{chat.message}</p>)
     ) : (
       <div
         style={{ display: "flex", justifyContent: "center", margin: "20px" }}
@@ -46,11 +56,24 @@ export default function ClientChatRoom({
   return (
     <>
       <input
-        value={chat}
+        value={currentMessage}
         placeholder="..send Message"
         onChange={(e) => handlerFunction(e)}
       />
-      <button>Send Message</button>
+      <button
+        onClick={() => {
+          socket?.send(
+            JSON.stringify({
+              type: "chat_room",
+              roomId: id,
+              message: currentMessage,
+            }),
+          );
+          setCurrentMessage("");
+        }}
+      >
+        Send Message
+      </button>
       {text}
     </>
   );

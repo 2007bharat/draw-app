@@ -3,20 +3,21 @@ import { WebSocket } from "ws";
 import { WebSocketServer } from "ws";
 import { IncomingMessage } from "node:http";
 import { tokenSecret, client } from "@repo/db-common/prismaClient";
+import { createImportSpecifier } from "typescript/unstable/ast/factory";
 const wss = new WebSocketServer({ port: 8080 });
 type Users<T> = {
   userId: number;
-  roomId: T[];
+  rooms: T[];
   ws: WebSocket;
 };
 interface TokenPaylod {
   userId: number;
 }
 export type ClientTypeChat = "join_room" | "chat_room" | "leave_room";
-type ClientJoinChatType<T> = { type: T; roomId: string };
-type roomIds = string[];
-const users: Users<roomIds>[] = [];
-const rooms: roomIds = [];
+type ClientJoinChatType<T> = { type: T; roomId: string; message?: string };
+type RoomId = string;
+const users: Users<RoomId>[] = [];
+const rooms: RoomId[] = [];
 async function tokenValid(token: string) {
   try {
     const verifyToken = jwt.verify(token, tokenSecret as string) as TokenPaylod;
@@ -56,17 +57,64 @@ wss.on("connection", async (ws: WebSocket, request: IncomingMessage) => {
 
   users.push({
     userId: user.id,
-    roomId: [],
+    rooms: [],
     ws: ws,
   });
 
-  ws.on("message", (data: WebSocket.RawData) => {
+  ws.on("message", async (data: WebSocket.RawData) => {
     const parsedData: ClientJoinChatType<ClientTypeChat> = JSON.parse(
       data.toString(),
     );
+
+    const currentUser = users.find((user) => {
+      return user.ws === ws;
+    });
+
+    if (!currentUser) {
+      return;
+    }
+
     if (parsedData.type === "join_room") {
       rooms.push(parsedData.roomId);
+
+      currentUser.rooms.push(parsedData.roomId);
+
       ws.send(`congratulation to join this ${parsedData.type}`);
+    }
+
+    if (parsedData.type === "leave_room") {
+      currentUser.rooms = currentUser.rooms.filter(
+        (room) => room !== parsedData.roomId,
+      );
+    }
+
+    if (parsedData.type === "chat_room") {
+      const roomId = parsedData.roomId;
+      const message = parsedData.message;
+
+      if (message === undefined) {
+        return;
+      }
+
+      await client.chat.create({
+        data: {
+          roomId: Number(roomId),
+          message,
+          userChatId: user.id,
+        },
+      });
+
+      users.forEach((user) => {
+        if (user.rooms.includes(roomId)) {
+          user.ws.send(
+            JSON.stringify({
+              type: "chat",
+              message,
+              roomId,
+            }),
+          );
+        }
+      });
     }
   });
 });

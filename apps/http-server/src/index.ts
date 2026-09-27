@@ -104,7 +104,7 @@ app.post("/sign-in", async (req: Request<{}, {}, SignSchemaType>, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user.id }, tokenSecret as string);
+    const token = jwt.sign({ userId: user.id }, tokenSecret as string);
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
@@ -113,6 +113,7 @@ app.post("/sign-in", async (req: Request<{}, {}, SignSchemaType>, res) => {
     res.json({
       success: true,
       message: "Login Successful",
+      token,
     });
   } catch (err) {
     if (err instanceof Error) {

@@ -9,4 +9,3 @@ const adapter = new PrismaPg({
 export const client: PrismaClient = new PrismaClient({ adapter });
 export const tokenSecret =
   "ASdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdasdfasdfasdfasdfasd";
-console.log(process.env.DATABASE_URL);

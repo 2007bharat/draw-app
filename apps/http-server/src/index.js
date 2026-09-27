@@ -7,8 +7,8 @@ import { Middleware } from "./middleware.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json({limit : "10kb"}));
+app.use(cookieParser("my-secret"));
 app.use(cors({
     origin: "http://localhost:3000",
     credentials: true,
@@ -79,10 +79,14 @@ app.post("/sign-in", async (req, res) => {
             });
         }
         const token = jwt.sign({ id: user.id }, tokenSecret);
+        const time = "7*24*60*60*1000";
         res.cookie("token", token, {
-            httpOnly: false,
+            httpOnly: true,
             sameSite: "lax",
             secure: false,
+            signed : true,
+            path : "/",
+            expires : new Date(Date.now()+time)
         });
         res.setHeader("Authorization", `Bearer ${token}`);
         res.json({
