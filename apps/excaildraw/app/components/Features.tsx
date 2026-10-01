@@ -7,7 +7,6 @@ import {
   Download,
   MousePointer2,
   Image as ImageIcon,
-  Zap,
   Lock,
 } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
@@ -38,6 +37,7 @@ const features = [
             className="animate-draw-stroke"
             style={{ strokeDasharray: 1000 }}
           />
+
           <path
             d="M 48 22 C 65 22, 70 22, 85 22"
             fill="none"
@@ -47,6 +47,7 @@ const features = [
             className="animate-draw-stroke"
             style={{ strokeDasharray: 1000 }}
           />
+
           <rect
             x="88"
             y="8"
@@ -59,6 +60,7 @@ const features = [
             className="animate-draw-stroke"
             style={{ strokeDasharray: 1000 }}
           />
+
           <defs>
             <marker
               id="f1arrow"
@@ -75,6 +77,7 @@ const features = [
       </div>
     ),
   },
+
   {
     icon: Users,
     title: "Real-time collaboration",
@@ -91,15 +94,20 @@ const features = [
           <div
             key={i}
             className="w-8 h-8 rounded-full border-2 border-white shadow-sm animate-bob"
-            style={{ background: c, animationDelay: `${i * 0.3}s` }}
+            style={{
+              background: c,
+              animationDelay: `${i * 0.3}s`,
+            }}
           />
         ))}
+
         <div className="w-8 h-8 rounded-full border-2 border-white bg-ink/5 flex items-center justify-center text-xs font-bold text-ink-soft">
           +5
         </div>
       </div>
     ),
   },
+
   {
     icon: Share2,
     title: "Share with a link",
@@ -115,12 +123,14 @@ const features = [
         <span className="text-xs font-mono text-ink-soft truncate">
           excalidraw.com/c/sk8...
         </span>
+
         <span className="text-xs font-bold text-accent-blue whitespace-nowrap">
           Copy
         </span>
       </div>
     ),
   },
+
   {
     icon: Download,
     title: "Export anywhere",
@@ -144,6 +154,7 @@ const features = [
       </div>
     ),
   },
+
   {
     icon: ImageIcon,
     title: "Drag & drop images",
@@ -160,6 +171,7 @@ const features = [
       </div>
     ),
   },
+
   {
     icon: Lock,
     title: "End-to-end encryption",
@@ -177,15 +189,54 @@ const features = [
             <div
               key={i}
               className="w-2 h-2 rounded-full bg-accent-coral/60 animate-pulse-soft"
-              style={{ animationDelay: `${i * 0.2}s` }}
+              style={{
+                animationDelay: `${i * 0.2}s`,
+              }}
             />
           ))}
         </div>
+
         <span className="text-xs font-mono text-ink-soft">AES-256</span>
       </div>
     ),
   },
 ];
+
+type Feature = (typeof features)[number];
+
+function FeatureCard({ feature }: { feature: Feature }) {
+  const { ref, visible } = useReveal();
+
+  const Icon = feature.icon;
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${
+        visible ? "is-visible" : ""
+      } ${feature.size} group relative p-6 lg:p-7 bg-white rounded-2xl border border-ink/8 hover:border-ink/15 hover:shadow-xl hover:shadow-ink/5 transition-all duration-300 hover:-translate-y-1`}
+      style={{
+        transitionDelay: `${feature.delay}ms`,
+      }}
+    >
+      <div className="flex items-start justify-between mb-4">
+        <div
+          className={`w-12 h-12 rounded-xl ${feature.bg} ${feature.border} border flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}
+        >
+          <Icon className={`w-6 h-6 ${feature.color}`} strokeWidth={2} />
+        </div>
+
+        <span className="font-hand text-lg text-ink-soft">{feature.hand}</span>
+      </div>
+
+      <h3 className="text-lg font-bold mb-1.5">{feature.title}</h3>
+
+      <p className="text-sm text-ink-light leading-relaxed">{feature.desc}</p>
+
+      {feature.visual}
+    </div>
+  );
+}
 
 export default function Features() {
   const { ref, visible } = useReveal();
@@ -201,12 +252,14 @@ export default function Features() {
             <MousePointer2 className="w-4 h-4" />
             Features
           </span>
+
           <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
             Everything you need to{" "}
             <span className="font-hand text-accent-purple text-4xl sm:text-5xl lg:text-6xl">
               think visually
             </span>
           </h2>
+
           <p className="mt-4 text-lg text-ink-light">
             Built for thinkers, planners, and makers. No setup, no friction —
             just you and your ideas.
@@ -214,34 +267,9 @@ export default function Features() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:auto-rows-fr">
-          {features.map((f, i) => {
-            const { ref: cardRef, visible: cardVis } = useReveal();
-            const Icon = f.icon;
-            return (
-              <div
-                key={f.title}
-                ref={cardRef}
-                className={`reveal ${cardVis ? "is-visible" : ""} ${f.size} group relative p-6 lg:p-7 bg-white rounded-2xl border border-ink/8 hover:border-ink/15 hover:shadow-xl hover:shadow-ink/5 transition-all duration-300 hover:-translate-y-1`}
-                style={{ transitionDelay: `${f.delay}ms` }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div
-                    className={`w-12 h-12 rounded-xl ${f.bg} ${f.border} border flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}
-                  >
-                    <Icon className={`w-6 h-6 ${f.color}`} strokeWidth={2} />
-                  </div>
-                  <span className="font-hand text-lg text-ink-soft">
-                    {f.hand}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold mb-1.5">{f.title}</h3>
-                <p className="text-sm text-ink-light leading-relaxed">
-                  {f.desc}
-                </p>
-                {f.visual}
-              </div>
-            );
-          })}
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} feature={feature} />
+          ))}
         </div>
       </div>
     </section>

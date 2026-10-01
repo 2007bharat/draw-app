@@ -9,20 +9,18 @@ import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 
 export default function Home() {
-  return function App() {
-    return (
-      <div className="min-h-screen bg-paper text-ink">
-        <Navbar />
-        <main>
-          <Hero />
-          <Features />
-          <Showcase />
-          <UseCases />
-          <Stats />
-          <CTA />
-        </main>
-        <Footer />
-      </div>
-    );
-  };
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <Showcase />
+        <UseCases />
+        <Stats />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
+  );
 }
